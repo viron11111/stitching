@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="respawn" default="true" />
+  <node name="camera1" pkg="usb_cam" type="usb_cam_node" output="screen" >
+    <param name="video_device" value="/dev/FLIR/camera_left" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="512" />
+    <param name="pixel_format" value="grey" />
+    <param name="camera_frame_id" value="boson_camera" />
+    <param name="io_method" value="mmap"/>
+    <remap from="camera1/image_raw" to="camera1/flir_boson_left/image_raw"/>
+  </node>
+
+  <node name="camera2" pkg="usb_cam" type="usb_cam_node" output="screen" >
+    <param name="video_device" value="/dev/FLIR/camera_center" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="512" />
+    <param name="pixel_format" value="grey" />
+    <param name="camera_frame_id" value="boson_camera" />
+    <param name="io_method" value="mmap"/>
+    <remap from="camera2/image_raw" to="camera2/flir_boson_center/image_raw"/>
+  </node>
+
+  <node name="camera3" pkg="usb_cam" type="usb_cam_node" output="screen" >
+    <param name="video_device" value="/dev/FLIR/camera_right" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="512" />
+    <param name="pixel_format" value="grey" />
+    <param name="camera_frame_id" value="boson_camera" />
+    <param name="io_method" value="mmap"/>
+    <remap from="camera3/image_raw" to="camera3/flir_boson_right/image_raw"/>
+  </node>
+
+  <node
+    pkg    = "web_video_server"
+    name   = "web_video_server"
+    output = "screen"
+    type   = "web_video_server"
+    >
+    <param name="port" type="int" value="1337"/>
+    <param name="server_threads" type="int" value="2"/>
+    <param name="ros_threads" type="int" value="2"/>
+    <param name="address" type="string" value="192.168.55.138"/>
+  </node>
+
+  <node
+    pkg    = "stitching"
+    name   = "stitching_algorithm"
+    output = "screen"
+    type   = "combine_5.py"
+    >
+  </node>
+
+</launch>
